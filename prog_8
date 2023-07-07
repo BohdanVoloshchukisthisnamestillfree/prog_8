@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+//програма обчислення кількості можливих комбінацій слів
+//із введеного набору букв
+//передбачено варіант врахування регісту
+
+int factorial(int n) //обчислюємо кількість можливих комбінацій взагалі
+  {
+    if (n <= 1)
+        {
+            return 1; 
+        }
+          else
+        {
+        return n * factorial(n - 1);//робимо рекурсивне обчислення n!
+        }
+  }
+
+     
+     int count(char* word, int ignore) 
+      {
+         int length = strlen(word);
+         int freq[256] = {0}; // створюємо масив для підрахунку частоти 
+         //появи кожної литери
+         int del = 1;//встановлюємо початкове значення
+                     //коефіцієнта, який враховує наявність однакових букв
+
+        // обчислюєм частоту появи кожної букви в заданому слові
+        for (int i = 0; i < length; i++)
+          {
+            char ch = ignore ? tolower(word[i]) : word[i];
+            freq[ch]++;
+          }
+
+         // обчислюєм значення дільника, який враховує наявність 
+         //в слові однакових букв
+     for (int i = 0; i < 256; i++)
+        del *= factorial(freq[i]);
+
+       // обчислюємо загальну кількість анаграм
+      int total = factorial(length)/del;
+
+    return total;
+ }
+
+   int main() 
+    {
+      char word[100];
+
+      printf("Enter your combination: \n");
+      scanf("%s", word);
+
+        if (strlen(word) > 14) 
+        {
+        printf("Your word is too long.\n");
+        return 0;
+        }
+
+      int ignore = 1; // передбачаємо можливість врахування регістру 
+                      //(малі/великі) літери
+
+       printf("ignore case - choose 1, else choose 0: ");
+       scanf("%d", &ignore);
+
+       int num = count(word, ignore);
+
+       printf("Number of anagrams : %d\n", num);
+
+    return 0;
+}
